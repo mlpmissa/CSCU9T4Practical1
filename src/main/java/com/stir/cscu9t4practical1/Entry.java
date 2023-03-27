@@ -2,7 +2,9 @@
 package com.stir.cscu9t4practical1;
 
 import java.util.Calendar;
+
 public class Entry {
+	
   private String name;
   private Calendar dateAndTime;
   private float distance;
