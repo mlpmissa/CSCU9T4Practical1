@@ -41,6 +41,7 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     private JButton addSwim = new JButton("Add Swim");
     private JButton lookUpByDate = new JButton("Look Up");
     private JButton findAllByDate = new JButton("Find All");
+    private JButton removeRecord = new JButton("Remove Record");
     
     private TrainingRecord myAthletes = new TrainingRecord();
 
@@ -105,6 +106,8 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         lookUpByDate.addActionListener(this);
         add(findAllByDate);
         findAllByDate.addActionListener(this);
+        add(removeRecord);
+        removeRecord.addActionListener(this);
         add(outputArea);
         outputArea.setEditable(false);
         setSize(720, 200);
@@ -135,15 +138,17 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
             message = lookupEntry();
         }
         if (event.getSource() == findAllByDate) {
-        	//message = findAllByDate();
         	message = findAllEntries();
+        }
+        if (event.getSource() == removeRecord) {
+        	message = removeRecord();
         }
         outputArea.setText(message);
         blankDisplay();
     } // actionPerformed
 
     public String addEntry(String what) {
-    	
+    	Boolean check = false;
         String message = "";
         System.out.println("Adding " + what + " entry to the records");
         String n = name.getText();
@@ -155,7 +160,11 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         int mm = Integer.parseInt(mins.getText());
         int s = Integer.parseInt(secs.getText());
         
-        if (what.equals("sprint")) {
+        check = myAthletes.checkEntry(n, d, m, y);
+        
+        if (check == true) {
+        	message = "This person has already done something today. Choose a different date or person:\n";
+        } else if (what.equals("sprint")) {
         	int rep2 = Integer.parseInt(rep.getText());
         	int rec2 = Integer.parseInt(rec.getText());
         	Entry e = new SprintEntry(n, d, m, y, h, mm, s, km, rep2, rec2);
@@ -203,6 +212,18 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         return message;
     }
     
+    public String removeRecord() {
+    	String message = "";
+    	String n = name.getText();
+    	int m = Integer.parseInt(month.getText());
+        int d = Integer.parseInt(day.getText());
+        int y = Integer.parseInt(year.getText());
+        outputArea.setText("deleting specified record ...");
+        message = myAthletes.removeRecord(n, d, m, y);
+        
+    	return message;
+    }
+    
     public void blankDisplay() {
         name.setText("");
         day.setText("");
@@ -212,6 +233,11 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         mins.setText("");
         secs.setText("");
         dist.setText("");
+        rep.setText("");
+        rec.setText("");
+        ter.setText("");
+        tem.setText("");
+        wh.setText("");
 
     }// blankDisplay
     // Fills the input fields on the display for testing purposes only
